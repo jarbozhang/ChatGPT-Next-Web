@@ -146,7 +146,7 @@ export function ChatList(props: { narrow?: boolean }) {
                 index={i}
                 selected={i === selectedIndex}
                 onClick={() => {
-                  navigate(Path.Chat);
+                  navigate(Path.Chat + "?key=" + localStorage.getItem("key"));
                   selectSession(i);
                 }}
                 onDelete={async () => {

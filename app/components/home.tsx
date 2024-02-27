@@ -14,6 +14,8 @@ import { getCSSVar, useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
 import { ModelProvider, Path, SlotID } from "../constant";
 import { ErrorBoundary } from "./error";
+import md5 from "spark-md5";
+import dayjs from "dayjs";
 
 import { getISOLang, getLang } from "../locales";
 
@@ -54,6 +56,18 @@ const NewChat = dynamic(async () => (await import("./new-chat")).NewChat, {
 const MaskPage = dynamic(async () => (await import("./mask")).MaskPage, {
   loading: () => <Loading noLogo />,
 });
+
+const parseQueryParams = (queryString: string) => {
+  const params = {} as any;
+  const keyValuePairs = queryString.split("&");
+
+  keyValuePairs.forEach((pair) => {
+    const [key, value] = pair.split("=");
+    params[decodeURIComponent(key)] = decodeURIComponent(value || "");
+  });
+
+  return params;
+};
 
 export function useSwitchTheme() {
   const config = useAppConfig();
@@ -127,12 +141,18 @@ function Screen() {
   const location = useLocation();
   const isHome = location.pathname === Path.Home;
   const isAuth = location.pathname === Path.Auth;
+  const { key } = parseQueryParams(location?.search.slice(1));
+  const hashedCode = md5.hash(dayjs().format("YYYY-MM-DD") + "-duosuan").trim();
+  // console.log("🚀 ~ Screen ~ hashedCode:", hashedCode)
+  if (key !== hashedCode && isHome) throw Error("无权访问");
+
   const isMobileScreen = useMobileScreen();
   const shouldTightBorder =
     getClientConfig()?.isApp || (config.tightBorder && !isMobileScreen);
 
   useEffect(() => {
     loadAsyncGoogleFont();
+    localStorage.setItem("key", key);
   }, []);
 
   return (

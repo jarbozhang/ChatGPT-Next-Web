@@ -561,7 +561,9 @@ export function MaskPage() {
                     text={Locale.Mask.Item.Chat}
                     onClick={() => {
                       chatStore.newSession(m);
-                      navigate(Path.Chat);
+                      navigate(
+                        Path.Chat + "?key=" + localStorage.getItem("key"),
+                      );
                     }}
                   />
                   {m.builtin ? (

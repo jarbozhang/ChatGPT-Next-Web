@@ -38,6 +38,9 @@ import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
 import RobotIcon from "../icons/robot.svg";
 
+import md5 from "spark-md5";
+import dayjs from "dayjs";
+
 import {
   ChatMessage,
   SubmitKey,
@@ -80,7 +83,7 @@ import {
   showPrompt,
   showToast,
 } from "./ui-lib";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   CHAT_PAGE_SIZE,
   LAST_INPUT_KEY,
@@ -101,6 +104,18 @@ import { MultimodalContent } from "../client/api";
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
 });
+
+const parseQueryParams = (queryString: string) => {
+  const params = {} as any;
+  const keyValuePairs = queryString.split("&");
+
+  keyValuePairs.forEach((pair) => {
+    const [key, value] = pair.split("=");
+    params[decodeURIComponent(key)] = decodeURIComponent(value || "");
+  });
+
+  return params;
+};
 
 export function SessionConfigModel(props: { onClose: () => void }) {
   const chatStore = useChatStore();
@@ -649,6 +664,10 @@ export function DeleteImageButton(props: { deleteImage: () => void }) {
 
 function _Chat() {
   type RenderMessage = ChatMessage & { preview?: boolean };
+  const location = useLocation();
+  const { key } = parseQueryParams(location?.search.slice(1));
+  const hashedCode = md5.hash(dayjs().format("YYYY-MM-DD") + "-duosuan").trim();
+  if (key !== hashedCode) throw Error("无权访问");
 
   const chatStore = useChatStore();
   const session = chatStore.currentSession();
