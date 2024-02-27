@@ -14,8 +14,10 @@ export function AuthPage() {
   const navigate = useNavigate();
   const accessStore = useAccessStore();
 
-  const goHome = () => navigate(Path.Home);
-  const goChat = () => navigate(Path.Chat);
+  const goHome = () =>
+    navigate(Path.Home + "?key=" + localStorage.getItem("key"));
+  const goChat = () =>
+    navigate(Path.Chat + "?key=" + localStorage.getItem("key"));
   const resetAccessCode = () => {
     accessStore.update((access) => {
       access.openaiApiKey = "";

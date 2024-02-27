@@ -116,7 +116,9 @@ export function NewChat() {
         <IconButton
           icon={<LeftIcon />}
           text={Locale.NewChat.Return}
-          onClick={() => navigate(Path.Home)}
+          onClick={() =>
+            navigate(Path.Home + "?key=" + localStorage.getItem("key"))
+          }
         ></IconButton>
         {!state?.fromHome && (
           <IconButton

@@ -1175,7 +1175,9 @@ function _Chat() {
                 icon={<ReturnIcon />}
                 bordered
                 title={Locale.Chat.Actions.ChatList}
-                onClick={() => navigate(Path.Home)}
+                onClick={() =>
+                  navigate(Path.Home + "?key=" + localStorage.getItem("key"))
+                }
               />
             </div>
           </div>

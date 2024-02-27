@@ -634,7 +634,7 @@ export function Settings() {
   useEffect(() => {
     const keydownEvent = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        navigate(Path.Home);
+        navigate(Path.Home + "?key=" + localStorage.getItem("key"));
       }
     };
     if (clientConfig?.isApp) {
@@ -670,7 +670,9 @@ export function Settings() {
           <div className="window-action-button">
             <IconButton
               icon={<CloseIcon />}
-              onClick={() => navigate(Path.Home)}
+              onClick={() =>
+                navigate(Path.Home + "?key=" + localStorage.getItem("key"))
+              }
               bordered
             />
           </div>
